@@ -4,7 +4,7 @@
     <div class="navbar-nav me-3">
         <AuthorizeView>
             <Authorized>
-                <a class="nav-item nav-link" href="/logout">Logout</a>
+                <a class="nav-item nav-link" href="/" @onclick="async () => await LogOutAsync()">Logout</a>
             </Authorized>
             <NotAuthorized>
                 <a class="nav-item nav-link" href="/login">Login</a>

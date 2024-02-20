@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using PerrineApp.Models;
 using System.Security.Claims;
@@ -26,9 +27,9 @@ namespace PerrineApp.Services
 
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim("userName", userName.ToString()),
-                    new Claim("userId", userId.ToString()),
-                });
+                    new Claim("userName", userName.Value),
+                    new Claim("userId", userId.Value),
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
             }
 
             return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
@@ -43,7 +44,7 @@ namespace PerrineApp.Services
             {
                 new Claim("userName", user.Name),
                 new Claim("userId", user.Id.ToString()),
-            });
+            }, CookieAuthenticationDefaults.AuthenticationScheme);
 
             var principal = new ClaimsPrincipal(identity);
 

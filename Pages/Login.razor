@@ -1,7 +1,5 @@
 ﻿@page "/login"
 @using PerrineApp.Models
-@using PerrineApp.Services
-@inject NavigationManager NavigationManager
 
 <div class="back">
     <div class="div-center">
@@ -16,28 +14,11 @@
 
                 <div class="mb-3">
                     <label for="inputPassword" class="form-label">Enter Password: </label>
-                    <InputText id="inputPassword" class="form-control" @bind-Value=@Model.Password></InputText>
+                    <InputText type="password" id="inputPassword" class="form-control" @bind-Value=@Model.Password></InputText>
                 </div>
 
-                <button type="submit" class="btn btn-primary" @onclick="async () => await OnLogin()">Submit</button>
+                <button type="submit" class="btn btn-primary" @onclick="async () => await LogInAsync()">Submit</button>
             </EditForm>
         </div>
     </div>
 </div>
-@code {
-    [Inject]
-    public AuthenticationStateProvider AuthStateProvider { get; set; }
-
-    public LoginModel Model { get; set; } = new LoginModel();
-
-    public async Task OnLogin()
-    {
-        if(Model.Username == "dom" && Model.Password == "1234")
-        {
-            await ((CustomAuthenticationStateProvider)AuthStateProvider).LogInAsync(new UserModel { Id = 1, Name = Model.Username });
-            NavigationManager.NavigateTo("/");
-        }
-        else
-            NavigationManager.NavigateTo("/login");
-    }
-}
