@@ -1,14 +1,30 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
-    <a class="navbar-brand ms-3" href="#">PerrineBoyz</a>
-
-    <div class="navbar-nav me-3">
+﻿@using PerrineApp.Services
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; height: 100vh;">
+    <AuthorizeView>
+        <Authorized>
+            <div>
+                <img class="rounded-circle me-2" style="height: 50px; width: 50px;" src="/images/profile.png" />
+                <span>Welcome @context.User.Identity.Name</span>
+                <hr>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <NavLink href="/" class="nav-link text-white" Match="NavLinkMatch.All"><span><i class="fa-solid fa-house me-1"></i>Home</span></NavLink>
+        </li>
         <AuthorizeView>
             <Authorized>
-                <a class="nav-item nav-link" href="/" @onclick="async () => await LogOutAsync()">Logout</a>
+                <li class="nav-item">
+                    <NavLink href="/events" class="nav-link text-white"><span><i class="fa-solid fa-calendar me-1"></i>Events</span></NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/cleaningSchedule" class="nav-link text-white"><span><i class="fa-solid fa-broom me-1"></i>Cleaning Schedule</span></NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/mustang" class="nav-link text-white"><span><i class="fa-solid fa-car me-1"></i>Mustang</span></NavLink>
+                </li>
             </Authorized>
-            <NotAuthorized>
-                <a class="nav-item nav-link" href="/login">Login</a>
-            </NotAuthorized>
         </AuthorizeView>
-    </div>
-</nav>
+    </ul>
+</div>

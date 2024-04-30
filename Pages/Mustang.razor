@@ -1,0 +1,100 @@
+﻿@page "/mustang";
+@using PerrineApp.Shared.Components
+<PageTitle>Mustang</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1 class="ms-1">Mustang Info Page</h1>
+        <hr/>
+        <div class="container">
+            <div class="row row-cols-4 g-3">
+                @foreach(var item in Mustangs)
+                {
+                    <div class="col">
+                        <Card
+                            Title="@item.Name"
+                            ImgSrc="@item.ImgSrc"
+                            YearRange="@item.YearRange"
+                            NickName="@item.NickName"/>
+                    </div>
+                }
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        Please <a href="/login">login</a> to continue.
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private Car[] Mustangs { get; set; }
+
+    public Mustang()
+    {
+        Mustangs = getMustangData();
+    }
+
+    private Car[] getMustangData()
+    {
+        return new Car[]
+        {
+            new Car
+            {
+                Name="1st Generation",
+                YearRange="1964-1973",
+                NickName="Classic Mustang",
+                ImgSrc="/images/first-gen.jpg"
+            },
+            new Car
+            {
+                Name="2nd Generation",
+                YearRange="1974-1978",
+                NickName="Mustang II",
+                ImgSrc="/images/second-gen.jpg"
+            },
+            new Car
+            {
+                Name="3rd Generation",
+                YearRange="1979-1993",
+                NickName="Fox Body",
+                ImgSrc="/images/third-gen.jpg"
+            },
+            new Car
+            {
+                Name="4th Generation",
+                YearRange="1994-2004",
+                NickName="SN95",
+                ImgSrc="/images/fourth-gen.jpg"
+            },
+            new Car
+            {
+                Name="5th Generation",
+                YearRange="2005-2014",
+                NickName="S197",
+                ImgSrc="/images/fifth-gen.jpg"
+            },
+            new Car
+            {
+                Name="6th Generation",
+                YearRange="2015-2023",
+                NickName="S550",
+                ImgSrc="/images/sixth-gen.jpg"
+            },
+            new Car
+            {
+                Name="7th Generation",
+                YearRange="2024-",
+                NickName="S650",
+                ImgSrc="/images/seventh-gen.jpg"
+            }
+        };
+    }
+
+    private class Car
+    {
+        public string Name { get; set; } = string.Empty;
+        public string YearRange { get; set; } = string.Empty;
+        public string NickName { get; set; } = string.Empty;
+        public string ImgSrc { get; set; } = string.Empty;
+    }
+}

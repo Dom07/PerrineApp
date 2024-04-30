@@ -23,11 +23,11 @@ namespace PerrineApp.Services
 
             if (userId.Value != null)
             {
-                var userName = await _sessionStorage.GetAsync<string>("userName");
+                var userName = await _sessionStorage.GetAsync<string>(ClaimTypes.Name);
 
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim("userName", userName.Value),
+                    new Claim(ClaimTypes.Name, userName.Value),
                     new Claim("userId", userId.Value),
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
             }
@@ -38,11 +38,11 @@ namespace PerrineApp.Services
         public async Task LogInAsync(UserModel user)
         {
             await _sessionStorage.SetAsync("userId", user.Id.ToString());
-            await _sessionStorage.SetAsync("userName", user.Name);
+            await _sessionStorage.SetAsync(ClaimTypes.Name, user.Name);
 
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim("userName", user.Name),
+                new Claim(ClaimTypes.Name, user.Name),
                 new Claim("userId", user.Id.ToString()),
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
