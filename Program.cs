@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using PerrineApp.DataAccess;
@@ -17,9 +18,11 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddBlazoredToast();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IDataAccess, SqliteDataAccess>();
 builder.Services.AddScoped<IUserAccess, UserAccess>();
+builder.Services.AddScoped<IAnnouncementAccess, AnnouncementAccess>();
 
 var app = builder.Build();
 

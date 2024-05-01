@@ -43,7 +43,7 @@
 
         if (user!=null)
         {
-            await ((CustomAuthenticationStateProvider)AuthStateProvider).LogInAsync(new UserModel { Id = user.Id, FirstName = user.FirstName });
+            await ((CustomAuthenticationStateProvider)AuthStateProvider).LogInAsync(user);
             NavigationManager?.NavigateTo("/");
         }
         else NavigationManager?.NavigateTo("/login");

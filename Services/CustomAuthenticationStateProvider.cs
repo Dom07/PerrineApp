@@ -27,7 +27,7 @@ namespace PerrineApp.Services
 
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, userName.Value),
+                    new Claim(ClaimTypes.Name, userName.Value!),
                     new Claim("userId", userId.Value),
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
             }
@@ -38,12 +38,13 @@ namespace PerrineApp.Services
         public async Task LogInAsync(UserModel user)
         {
             await _sessionStorage.SetAsync("userId", user.Id.ToString());
-            await _sessionStorage.SetAsync(ClaimTypes.Name, user.Name);
+            await _sessionStorage.SetAsync(ClaimTypes.Name, user.FirstName);
 
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Name, user.FirstName),
                 new Claim("userId", user.Id.ToString()),
+                new Claim("picture", user.Picture),
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
             var principal = new ClaimsPrincipal(identity);

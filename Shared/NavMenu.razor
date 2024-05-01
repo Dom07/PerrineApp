@@ -3,7 +3,7 @@
     <AuthorizeView>
         <Authorized>
             <div>
-                <img class="rounded-circle me-2" style="height: 50px; width: 50px;" src="/images/profile.png" />
+                <img class="rounded-circle me-2" style="height: 50px; width: 50px;" src="/images/profile/@context.User.Claims.Where(c => c.Type == "picture").FirstOrDefault().Value.ToString()" />
                 <span>Welcome @context.User.Identity.Name</span>
                 <hr>
             </div>
@@ -17,9 +17,6 @@
             <Authorized>
                 <li class="nav-item">
                     <NavLink href="/events" class="nav-link text-white"><span><i class="fa-solid fa-calendar me-1"></i>Events</span></NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink href="/cleaningSchedule" class="nav-link text-white"><span><i class="fa-solid fa-broom me-1"></i>Cleaning Schedule</span></NavLink>
                 </li>
                 <li class="nav-item">
                     <NavLink href="/mustang" class="nav-link text-white"><span><i class="fa-solid fa-car me-1"></i>Mustang</span></NavLink>

@@ -1,12 +1,32 @@
 ﻿@page "/"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
 
 <PageTitle>Index</PageTitle>
-<h1>Welcome to Perrine Boyz App</h1>
 <AuthorizeView>
     <Authorized>
-        Look around and have fun!
+        <h3>Latest Announcements</h3>
+        <hr/>
+        <ul>
+        @foreach(var item in _announcements)
+        {
+            <li>@item.FirstName - @item.Message</li>
+        }
+        </ul>
     </Authorized>
     <NotAuthorized>
+        <h1>Welcome to Perrine Boyz App</h1>
         Please <a href="/login">login</a> to continue.
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    [Inject]
+    private IAnnouncementAccess _announcementAccess { get; set; }
+
+    private List<AnnouncementModel> _announcements { get; set; } = new();
+
+    protected override void OnInitialized(){
+        _announcements = _announcementAccess.GetAnnouncements();
+    }
+}

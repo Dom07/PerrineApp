@@ -94,3 +94,11 @@ div.content {
 .nav-pills .nav-link.active {
     background-color: darkslateblue;
 }
+
+.dropdown-item{
+    color: black !important;
+}
+
+.dropdown-item:hover{
+    color: gray !important;
+}

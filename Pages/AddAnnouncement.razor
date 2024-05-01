@@ -1,0 +1,56 @@
+﻿@page "/announcement/new"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+
+<h3>New Announcement</h3>
+<hr/>
+
+<EditForm Model="@Model">
+    <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <InputText id="message" class="form-control" @bind-Value=@Model.Message></InputText>
+    </div>
+    <button type="submit" class="btn btn-primary" @onclick="async() => await NewAnnouncement()">Submit</button>
+</EditForm>
+
+@code {
+    [Inject]
+    public AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    [Inject]
+    private IAnnouncementAccess _announcementAccess { get; set; }
+
+    [Inject]
+    private IToastService _toastService { get; set; }
+
+    public AnnouncementModel Model { get; set; } = new AnnouncementModel();
+
+    public async Task NewAnnouncement()
+    {
+        if (string.IsNullOrWhiteSpace(Model.Message))
+        {
+            _toastService.ShowWarning("Empty Message? Really?");
+            return;
+        }
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value.ToString());
+        Model.Date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+        var result = await _announcementAccess.NewAnnouncement(Model);
+
+        if (result)
+        {
+            _toastService.ShowSuccess("Announcement Added.");
+            clearModel();
+        }
+        else
+            _toastService.ShowError("Wops! Something went wrong while adding announcement.");
+    }
+
+    private void clearModel()
+    {
+        Model.Message = string.Empty;
+        Model.UserId = -1;
+        Model.Date = string.Empty;
+    }
+}
