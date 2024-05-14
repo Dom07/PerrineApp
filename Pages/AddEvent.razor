@@ -1,0 +1,72 @@
+﻿@page "/event/new"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+@attribute [Authorize]
+
+<h3>New Event</h3>
+<hr/>
+
+<EditForm Model="@Model">
+    <div class="mb-2">
+        <label for="name" class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value=@Model.Name></InputText>
+    </div>
+    <div class="mb-2">
+        <label for="category" class="form-label">Event Category</label>
+        <InputSelect id="category" class="form-control" @bind-Value=@Model.CategoryId>
+            <option value="">Select Category...</option>
+            @foreach(var item in EventCategories)
+            {
+                <option value="@item.Id">@item.CategoryName</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="mb-2">
+        <label for="date" class="form-label">Date</label>
+        <InputDate id="date" class="form-control" @bind-Value=@Model.Date></InputDate>
+    </div>
+    <button type="submit" class="btn btn-primary" @onclick="async() => await NewEvent()">Submit</button>
+</EditForm>
+
+@code {
+    [Inject]
+    public AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    [Inject]
+    private IEventAccess _eventAccess { get; set; }
+
+    [Inject]
+    private IToastService _toastService { get; set; }
+
+    public EventModel Model { get; set; } = new EventModel();
+    public List<EventCategoryModel> EventCategories { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        EventCategories = _eventAccess.GetEventCategories();
+    }
+
+    public async Task NewEvent()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value.ToString());
+
+        var result = await _eventAccess.NewEvent(Model);
+
+        if (result)
+        {
+            _toastService.ShowSuccess("Event Added.");
+            clearModel();
+        }
+        else
+            _toastService.ShowError("Wops! Something went wrong while adding event.");
+    }
+
+    private void clearModel()
+    {
+        Model.Name = string.Empty;
+        Model.UserId = -1;
+        Model.CategoryId = 0;
+        Model.Date = DateTime.Now;
+    }
+}

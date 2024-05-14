@@ -16,7 +16,7 @@ namespace PerrineApp.DataAccess
         public List<AnnouncementModel> GetAnnouncements()
         {
             using IDbConnection cnn = _dataAccess.CreateConnection();
-            var output = cnn.Query<AnnouncementModel>("Select A.Message, B.FirstName from Announcements as A join User as B on A.UserId = B.Id ORDER by A.Id DESC LIMIT 5;", new DynamicParameters());
+            var output = cnn.Query<AnnouncementModel>("Select A.Message, B.Picture from Announcements as A join User as B on A.UserId = B.Id ORDER by A.Id DESC LIMIT 5;", new DynamicParameters());
             return output.ToList();
         }
 

@@ -4,7 +4,7 @@
     {
         public string Message { get; set; } = string.Empty;
         public int UserId { get; set; }  
-        public string FirstName { get; set; } = string.Empty;
+        public string Picture { get; set; } = string.Empty;
         public string Date { get; set;} = string.Empty;
     }
 }

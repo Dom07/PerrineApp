@@ -23,6 +23,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddScoped<IDataAccess, SqliteDataAccess>();
 builder.Services.AddScoped<IUserAccess, UserAccess>();
 builder.Services.AddScoped<IAnnouncementAccess, AnnouncementAccess>();
+builder.Services.AddScoped<IEventAccess, EventAccess>();
 
 var app = builder.Build();
 

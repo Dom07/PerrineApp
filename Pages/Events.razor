@@ -1,8 +1,30 @@
 ﻿@page "/events"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+@attribute [Authorize]
 
-<h3>Upcoming Events</h3>
-<hr />
+<PageTitle>Events</PageTitle>
+
+<div class="ms-2">
+    <h3>Events</h3>
+    <hr />
+    <ul style="list-style-type: none;" class="p-1">
+        @foreach(var item in _eventList)
+        {
+            <li class="m-2">
+                <i class="@item.FontAwesomeClass"></i> @item.Name - @item.Date.ToString("D")
+            </li>
+        }
+    </ul>
+</div>
 
 @code {
+    [Inject]
+    private IEventAccess _eventAccess { get; set; }
+    private List<EventModel> _eventList { get; set; } = new();
 
+    protected override void OnInitialized()
+    {
+        _eventList = _eventAccess.GetEvents();
+    }
 }

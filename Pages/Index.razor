@@ -5,14 +5,20 @@
 <PageTitle>Index</PageTitle>
 <AuthorizeView>
     <Authorized>
-        <h3>Latest Announcements</h3>
-        <hr/>
-        <ul>
-        @foreach(var item in _announcements)
-        {
-            <li>@item.FirstName - @item.Message</li>
-        }
-        </ul>
+        <div class="ms-2">
+            <h3>Latest Announcements</h3>
+            <hr />
+            <ul style="list-style-type: none;" class="p-1">
+                @foreach (var item in _announcements)
+                {
+                    <li class="m-2">
+                        <img class="rounded-circle me-2" 
+                             style="height: 50px; width: 50px;" 
+                             src="/images/profile/@item.Picture" /> @item.Message
+                    </li>
+                }
+            </ul>
+        </div>
     </Authorized>
     <NotAuthorized>
         <h1>Welcome to Perrine Boyz App</h1>
@@ -20,13 +26,14 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
+@code {
     [Inject]
     private IAnnouncementAccess _announcementAccess { get; set; }
 
     private List<AnnouncementModel> _announcements { get; set; } = new();
 
-    protected override void OnInitialized(){
+    protected override void OnInitialized()
+    {
         _announcements = _announcementAccess.GetAnnouncements();
     }
 }
