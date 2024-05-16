@@ -1,0 +1,24 @@
+﻿@page "/posts"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+@using PerrineApp.Shared.Components
+
+@inject IPostAccess PostAccess
+
+<h3>Perrine Ke Charche</h3>
+<hr />
+<div class="w-50">
+    @foreach(var item in PostList)
+    {
+        <PostItem Model=@item />
+    }
+</div>
+@code {
+    public List<PostModel> PostList { get; set; }
+
+    protected override void OnInitialized()
+    {
+        PostList = PostAccess.GetAllPosts();
+        base.OnInitialized();
+    }
+}

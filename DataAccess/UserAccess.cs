@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using PerrineApp.Models;
 using System.Data;
+using System.Reflection.Metadata;
 
 namespace PerrineApp.DataAccess
 {
@@ -13,11 +14,12 @@ namespace PerrineApp.DataAccess
             _dataAccess = dataAccess;
         }
 
-        public List<UserModel> LoadUsers()
+        public UserModel GetUserById(int Id)
         {
             using IDbConnection cnn = _dataAccess.CreateConnection();
-            var output = cnn.Query<UserModel>("select * from User", new DynamicParameters());
-            return output.ToList();
+            var param = new { Id };
+            var output = cnn.Query<UserModel>("select * from User where Id = @Id limit 1", param).FirstOrDefault();
+            return output;
 
         }
 

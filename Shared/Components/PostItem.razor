@@ -1,0 +1,17 @@
+﻿@using PerrineApp.Models
+
+<div class="card mb-2">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title</h5>
+        <p class="card-text">@Model.Content</p>
+        <div class="d-flex justify-content-between">
+            <p class="card-subtitle">(CIRCLE) - Comments</p>
+            <p class="card-subtitle text-muted align-self-end">UserName - 5/16/2024 1:43 PM</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public PostModel Model{ get; set; }
+}
