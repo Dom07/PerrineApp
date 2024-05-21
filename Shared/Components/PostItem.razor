@@ -6,7 +6,12 @@
         <p class="card-text">@Model.Content</p>
         <div class="d-flex justify-content-between">
             <p class="card-subtitle">(CIRCLE) - Comments</p>
-            <p class="card-subtitle text-muted align-self-end">UserName - 5/16/2024 1:43 PM</p>
+            <p class="card-subtitle text-muted align-self-end">
+                <img class="rounded-circle me-2"
+                     style="height: 30px; width: 30px;"
+                     src="/images/profile/@Model.Picture" />
+                     @Model.CreateTime.ToString("MM/dd/yyyy hh:mm tt")
+            </p>
         </div>
     </div>
 </div>

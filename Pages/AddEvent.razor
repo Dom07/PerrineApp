@@ -4,29 +4,31 @@
 @attribute [Authorize]
 
 <h3>New Event</h3>
-<hr/>
+<hr />
 
-<EditForm Model="@Model">
-    <div class="mb-2">
-        <label for="name" class="form-label">Name</label>
-        <InputText id="name" class="form-control" @bind-Value=@Model.Name></InputText>
-    </div>
-    <div class="mb-2">
-        <label for="category" class="form-label">Event Category</label>
-        <InputSelect id="category" class="form-control" @bind-Value=@Model.CategoryId>
-            <option value="">Select Category...</option>
-            @foreach(var item in EventCategories)
-            {
-                <option value="@item.Id">@item.CategoryName</option>
-            }
-        </InputSelect>
-    </div>
-    <div class="mb-2">
-        <label for="date" class="form-label">Date</label>
-        <InputDate id="date" class="form-control" @bind-Value=@Model.Date></InputDate>
-    </div>
-    <button type="submit" class="btn btn-primary" @onclick="async() => await NewEvent()">Submit</button>
-</EditForm>
+<div class="w-50">
+    <EditForm Model="@Model">
+        <div class="mb-2">
+            <label for="name" class="form-label">Name</label>
+            <InputText id="name" class="form-control" @bind-Value=@Model.Name></InputText>
+        </div>
+        <div class="mb-2">
+            <label for="category" class="form-label">Event Category</label>
+            <InputSelect id="category" class="form-control" @bind-Value=@Model.CategoryId>
+                <option value="">Select Category...</option>
+                @foreach (var item in EventCategories)
+                {
+                    <option value="@item.Id">@item.CategoryName</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-2">
+            <label for="date" class="form-label">Date</label>
+            <InputDate id="date" class="form-control" @bind-Value=@Model.Date></InputDate>
+        </div>
+        <button type="submit" class="btn btn-primary" @onclick="async() => await NewEventAsync()">Submit</button>
+    </EditForm>
+</div>
 
 @code {
     [Inject]
@@ -46,10 +48,10 @@
         EventCategories = _eventAccess.GetEventCategories();
     }
 
-    public async Task NewEvent()
+    public async Task NewEventAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value.ToString());
+        Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value);
 
         var result = await _eventAccess.NewEvent(Model);
 

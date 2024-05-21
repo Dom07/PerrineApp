@@ -23,7 +23,7 @@ namespace PerrineApp.DataAccess
         public async Task<bool> NewAnnouncement(AnnouncementModel Model)
         {
             using IDbConnection cnn = _dataAccess.CreateConnection();
-            var output = await cnn.ExecuteAsync("Insert into Announcements (Message, UserId, Date) values (@Message, @UserId, @Date)", Model);
+            var output = await cnn.ExecuteAsync("Insert into Announcements (Message, UserId, CreateTime) values (@Message, @UserId, @CreateTime)", Model);
             
             if(output > 0)
                 return true;

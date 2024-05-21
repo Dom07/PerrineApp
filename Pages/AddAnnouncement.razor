@@ -4,15 +4,17 @@
 @attribute [Authorize]
 
 <h3>New Announcement</h3>
-<hr/>
+<hr />
 
-<EditForm Model="@Model">
-    <div class="mb-3">
-        <label for="message" class="form-label">Message</label>
-        <InputText id="message" class="form-control" @bind-Value=@Model.Message></InputText>
-    </div>
-    <button type="submit" class="btn btn-primary" @onclick="async() => await NewAnnouncement()">Submit</button>
-</EditForm>
+<div class="w-50">
+    <EditForm Model="@Model">
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <InputText id="message" class="form-control" @bind-Value=@Model.Message></InputText>
+        </div>
+        <button type="submit" class="btn btn-primary" @onclick="async() => await NewAnnouncement()">Submit</button>
+    </EditForm>
+</div>
 
 @code {
     [Inject]
@@ -36,7 +38,6 @@
 
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value.ToString());
-        Model.Date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         var result = await _announcementAccess.NewAnnouncement(Model);
 
         if (result)
@@ -52,6 +53,6 @@
     {
         Model.Message = string.Empty;
         Model.UserId = -1;
-        Model.Date = string.Empty;
+        Model.CreateTime = DateTime.Now;
     }
 }

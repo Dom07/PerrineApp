@@ -1,0 +1,58 @@
+﻿@page "/post/new"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+@attribute [Authorize]
+
+<h3>New Post</h3>
+<hr />
+
+<div class="w-50">
+    <EditForm Model="@Model">
+        <div class="mb-2">
+            <label for="title" class="form-label">Name</label>
+            <InputText id="title" class="form-control" @bind-Value=@Model.Title></InputText>
+        </div>
+        <div class="mb-2">
+            <label for="content" class="form-label">Content</label>
+            <InputTextArea id="content" class="form-control" @bind-Value=@Model.Content rows="4"></InputTextArea>
+        </div>
+        <button type="submit" class="btn btn-primary" @onclick="async() => await NewPostAsync()">Submit</button>
+    </EditForm>
+</div>
+@code {
+    [Inject]
+    public AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    [Inject]
+    private IPostAccess _postAccess { get; set; }
+
+    [Inject]
+    private IToastService _toastService { get; set; }
+
+    public PostModel Model { get; set; } = new PostModel();
+
+    public async Task NewPostAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        Model.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value);
+
+        var result = await _postAccess.NewPost(Model);
+
+        if (result)
+        {
+            _toastService.ShowSuccess("Post Added.");
+            clearModel();
+        }
+        else
+            _toastService.ShowError("Wops! Something went wrong while adding your post.");
+    }
+
+    private void clearModel()
+    {
+        Model.Title = string.Empty;
+        Model.Content = string.Empty;
+        Model.CreateTime = DateTime.Now;
+        Model.UserId = -1;
+    }
+
+}

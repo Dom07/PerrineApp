@@ -6,5 +6,6 @@ namespace PerrineApp.DataAccess
     {
         public List<PostModel> GetAllPosts();
         public PostModel GetPostById(int id);
+        public Task<bool> NewPost(PostModel Model);
     }
 }
