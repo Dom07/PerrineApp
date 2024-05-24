@@ -1,0 +1,44 @@
+﻿@page "/post/{PostId:int}"
+@using PerrineApp.DataAccess
+@using PerrineApp.Models
+@using PerrineApp.Shared.Components
+
+@inject IPostAccess PostAccess
+
+<div class="w-50">
+    <h4>@Model.Title</h4>
+    <p>@Model.Content</p>
+    <div class="d-flex justify-content-between">
+        <span>
+            <img class="rounded-circle me-2"
+                 style="height: 30px; width: 30px;"
+                 src="/images/profile/@Model.Picture" />
+            @Model.FirstName
+        </span>
+        <span>
+            @Model.CreateTime
+        </span>
+    </div>
+
+    <hr />
+
+    <button class="btn btn-secondary">Add Comment</button>
+
+    @foreach(var item in Model.Comments)
+    {
+        <CommentItem Model="@item"/>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int PostId { get; set; }
+
+    public PostModel Model { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model = PostAccess.GetPostById(PostId);
+        base.OnInitialized();
+    }
+}
