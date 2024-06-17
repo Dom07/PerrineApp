@@ -1,5 +1,5 @@
-﻿using System.Data;
-using System.Data.SQLite;
+﻿using Microsoft.Data.Sqlite;
+using System.Data;
 
 namespace PerrineApp.DataAccess
 {
@@ -13,6 +13,6 @@ namespace PerrineApp.DataAccess
 
         private string LoadConnectionString() => _configuration.GetConnectionString("Default");
 
-        public IDbConnection CreateConnection() => new SQLiteConnection(LoadConnectionString());
+        public IDbConnection CreateConnection() => new SqliteConnection(LoadConnectionString());
     }
 }
