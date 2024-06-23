@@ -1,44 +1,125 @@
 ﻿@page "/post/{PostId:int}"
 @using PerrineApp.DataAccess
 @using PerrineApp.Models
+@using PerrineApp.Pages.Post.Comment
 @using PerrineApp.Shared.Components
 
 @inject IPostAccess PostAccess
 
 <div class="w-50">
-    <h4>@Model.Title</h4>
-    <p>@Model.Content</p>
-    <div class="d-flex justify-content-between">
-        <span>
-            <img class="rounded-circle me-2"
-                 style="height: 30px; width: 30px;"
-                 src="/images/profile/@Model.Picture" />
-            @Model.FirstName
-        </span>
-        <span>
-            @Model.CreateTime
-        </span>
+    <div style="border: 1px solid lightgray;
+                border-radius: 20px;
+                padding: 20px;">
+        <h4>@PostModel.Title</h4>
+        <p>@PostModel.Content</p>
+        <div class="d-flex justify-content-between">
+            <span>
+                <img class="rounded-circle me-2"
+                     style="height: 30px; width: 30px;"
+                     src="/images/profile/@PostModel.Picture" />
+                @PostModel.FirstName
+            </span>
+            <span class="create-time">
+                @PostModel.CreateTime
+            </span>
+        </div>
     </div>
 
-    <hr />
+    <div class="d-flex justify-content-end mt-3 me-2">
+        <button class="btn btn-secondary" onclick="@showModal">Add Comment</button>
+    </div>
 
-    <button class="btn btn-secondary">Add Comment</button>
-
-    @foreach(var item in Model.Comments)
+    @foreach (var item in PostModel.Comments)
     {
-        <CommentItem Model="@item"/>
+        <CommentItem Model="@item" />
+    }
+
+    @if (ShowModal)
+    {
+        <div class="modal" tabindex="-1" style="display:block; background: #0000005c;" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add Comment</h3>
+                        <button type="button" class="btn-close" onclick="@closeModal">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@CommentModel">
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Comment</label>
+                                <InputText id="message" class="form-control" @bind-Value="@CommentModel.Comment"></InputText>
+                            </div>
+                        </EditForm>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-block btn-success"
+                                onclick="@(async() => await SaveComment())"
+                                data-dismiss="modal">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 </div>
 
 @code {
+    [Inject]
+    public AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    [Inject]
+    private IToastService _toastService { get; set; }
+
     [Parameter]
     public int PostId { get; set; }
 
-    public PostModel Model { get; set; }
+    public PostModel PostModel { get; set; }
+
+    public CommentModel CommentModel { get; set; } = new CommentModel();
+
+    private bool ShowModal { get; set; } = false;
 
     protected override void OnInitialized()
     {
-        Model = PostAccess.GetPostById(PostId);
+        PostModel = PostAccess.GetPostById(PostId);
         base.OnInitialized();
+    }
+
+    private void closeModal()
+    {
+        ShowModal = false;
+    }
+
+    private void showModal()
+    {
+        ShowModal = true;
+        Console.WriteLine("Show Modal is: " + ShowModal);
+    }
+
+    private async Task SaveComment()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        CommentModel.UserId = Int32.Parse(authState.User.Claims.Where(c => c.Type == "userId").FirstOrDefault()!.Value.ToString());
+        CommentModel.PostId = PostId;
+        CommentModel.CreateTime = DateTime.Now;
+        var (status, result) = await PostAccess.AddComment(CommentModel);
+
+        if (status)
+        {
+            ShowModal = false;
+            PostModel.Comments = result;
+            _toastService.ShowSuccess("Comment Added.");
+            clearModel();
+        }
+        else
+            _toastService.ShowError("Wops! Something went wrong while adding comment.");
+    }
+
+    private void clearModel()
+    {
+        CommentModel.Comment = string.Empty;
+        CommentModel.CreateTime = DateTime.Now;
     }
 }

@@ -102,3 +102,12 @@ div.content {
 .dropdown-item:hover{
     color: gray !important;
 }
+
+.post:hover {
+    cursor: pointer;
+    background-color: ghostwhite;
+}
+
+.create-time{
+    color: gray;
+}

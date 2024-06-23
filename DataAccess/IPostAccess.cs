@@ -7,5 +7,6 @@ namespace PerrineApp.DataAccess
         public List<PostModel> GetAllPosts();
         public PostModel GetPostById(int id);
         public Task<bool> NewPost(PostModel Model);
+        public Task<(bool, List<CommentModel>)> AddComment(CommentModel Model);
     }
 }

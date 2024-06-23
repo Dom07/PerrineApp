@@ -9,6 +9,7 @@
         public string FirstName { get; set; } = string.Empty;
         public string Picture { get; set; } = string.Empty;
         public DateTime CreateTime { get; set; } = DateTime.Now;
-        public List<CommentModel> Comments { get; set; }
+        public int CommentCount { get; set; } = 0;
+        public List<CommentModel> Comments { get; set; } = new List<CommentModel>();
     }
 }

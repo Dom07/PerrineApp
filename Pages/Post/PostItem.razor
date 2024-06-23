@@ -1,16 +1,17 @@
 ﻿@using PerrineApp.Models
+@inject NavigationManager NavigationManager
 
-<div class="card mb-2">
+<div class="card mb-2 post" @onclick="() => GoToPost()">
     <div class="card-body">
         <h5 class="card-title">@Model.Title</h5>
         <p class="card-text">@Model.Content</p>
         <div class="d-flex justify-content-between">
-            <p class="card-subtitle">(CIRCLE) - Comments</p>
+            <p class="card-subtitle"><i class="fa-regular fa-comment"></i> @Model.CommentCount</p>
             <p class="card-subtitle text-muted align-self-end">
                 <img class="rounded-circle me-2"
                      style="height: 30px; width: 30px;"
                      src="/images/profile/@Model.Picture" />
-                     @Model.CreateTime.ToString("MM/dd/yyyy hh:mm tt")
+                <span class="create-time">@Model.CreateTime.ToString("MM/dd/yyyy hh:mm tt")</span>
             </p>
         </div>
     </div>
@@ -19,4 +20,9 @@
 @code {
     [Parameter]
     public PostModel Model{ get; set; }
+
+    private void GoToPost()
+    {
+        NavigationManager.NavigateTo($"/post/{Model.Id}");
+    }
 }
