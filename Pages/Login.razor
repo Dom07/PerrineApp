@@ -8,15 +8,24 @@
         <div class="content">
             <h3>Login</h3>
             <hr />
+            @if (invalidLogin)
+            {
+                <div>
+                    <p class="validation-message">Incorrect login details provided. Please try again.</p>
+                </div>
+            }
             <EditForm Model="@Model">
+                <DataAnnotationsValidator />
                 <div class="mb-3">
                     <label for="inputUserName" class="form-label">Enter Username: </label>
                     <InputText id="inputUserName" class="form-control" @bind-Value=@Model.Username></InputText>
+                    <ValidationMessage For="() => Model.Username" />
                 </div>
 
                 <div class="mb-3">
                     <label for="inputPassword" class="form-label">Enter Password: </label>
                     <InputText type="password" id="inputPassword" class="form-control" @bind-Value=@Model.Password></InputText>
+                    <ValidationMessage For="() => Model.Password" />
                 </div>
 
                 <button type="submit" class="btn btn-primary" @onclick="async () => await LogInAsync()">Submit</button>
@@ -35,17 +44,21 @@
     [Inject]
     private IUserAccess _userAccess { get; set; }
 
+    private bool invalidLogin { get; set; } = false;
+
     public LoginModel Model { get; set; } = new LoginModel();
 
     public async Task LogInAsync()
     {
         var user = _userAccess.LoginUser(Model.Username, Model.Password);
 
-        if (user!=null)
+        if (user != null)
         {
+            invalidLogin = false;
             await ((CustomAuthenticationStateProvider)AuthStateProvider).LogInAsync(user);
             NavigationManager?.NavigateTo("/");
         }
-        else NavigationManager?.NavigateTo("/login");
+        else
+            invalidLogin = true;
     }
 }

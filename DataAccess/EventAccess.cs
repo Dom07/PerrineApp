@@ -23,7 +23,8 @@ namespace PerrineApp.DataAccess
         public List<EventModel> GetEvents()
         {
             using IDbConnection cnn = _dataAccess.CreateConnection();
-            var output = cnn.Query<EventModel>("Select e.Name, e.Date, ec.FontAwesomeClass from Events as e join EventCategories as ec on e.CategoryId = ec.Id ORDER BY e.Date", new DynamicParameters());
+            var dateNow = DateTime.Today;
+            var output = cnn.Query<EventModel>("Select e.Name, e.Date, ec.FontAwesomeClass from Events as e join EventCategories as ec on e.CategoryId = ec.Id where e.Date >= @dateNow ORDER BY e.Date", new {dateNow});
             return output.ToList();
         }
 
